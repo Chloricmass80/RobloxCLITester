@@ -8,12 +8,13 @@ This tool does a few things. It's main purpose is to streamline unit testing wit
 
 # Setup
 1. Clone the Repository
-2. Create a stub test place. **DO NOT** use a universe or place you care about, **IT WILL BE OVERWRITTEN AND DESTROYED!!**
-3. Create a valid API Key with valid perms. Will be discussed in more depth if you're unsure on how to do that.
-4. Clone "example.env" to "local.env" and fill in the values
-5. Create your unit tests
-6. Run test_handler.py
-7. Bathe in the unit testing glory!
+2. Place directories into your project as layed out in the "Project Structure" section
+3. Create a stub test place. **DO NOT** use a universe or place you care about, **IT WILL BE OVERWRITTEN AND DESTROYED!!**
+4. Create a valid API Key with valid perms. Will be discussed in more depth if you're unsure on how to do that.
+5. Clone "example.env" to "local.env" and fill in the values
+6. Create your unit tests
+7. Run test_handler.py
+8. Bathe in the unit testing glory!
 
 # Writing a Test:
 You can find the same explanation under the `Tests.luau` file itself, but I'll put it here as well and explain some things.
