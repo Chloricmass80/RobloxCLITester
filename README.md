@@ -18,6 +18,8 @@ This tool does a few things. It's main purpose is to streamline unit testing wit
 # Writing a Test:
 You can find the same explanation under the "Tests.luau" file itself, but I'll put it here as well and explain some things.
 
+To create a test, you don't have to ever touch `test_handler.py`. Everything is accessible through Tests.luau, you shouldn't need to touch the Python file unless you want to change how things are formatted or more advanced things.
+
 Here is an example test structure for reference:
 
 ```lua
