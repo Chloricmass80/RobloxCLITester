@@ -74,6 +74,8 @@ And that's it!
 
 ## Further Notes:
 
+Action functions are designed to handle errors, so if you expect something might error, put it in the action function. This includes requiring modules and things like that. It is **highly recommended** any modules you are testing are required in the action functions each time they are needed and not outside of them, that way if the module has a runtime error it won't crash the test script, it'll just fail the test.
+
 `Condition:AddCheck()` takes a test name, and then an expected output.
 `Condition:RunChecks()` will run the checks in order of creation, it also expects the outputs in order of check creation. So if you created two tests, the result for the first one is in index 1, and the result of the second should be in index 2.
 
