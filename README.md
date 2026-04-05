@@ -16,9 +16,9 @@ This tool does a few things. It's main purpose is to streamline unit testing wit
 7. Bathe in the unit testing glory!
 
 # Writing a Test:
-You can find the same explanation under the "Tests.luau" file itself, but I'll put it here as well and explain some things.
+You can find the same explanation under the `Tests.luau` file itself, but I'll put it here as well and explain some things.
 
-To create a test, you don't have to ever touch `test_handler.py`. Everything is accessible through Tests.luau, you shouldn't need to touch the Python file unless you want to change how things are formatted or more advanced things.
+To create a test, you don't have to ever touch `test_handler.py`. Everything is accessible through `Tests.luau`, you shouldn't need to touch the Python file unless you want to change how things are formatted or more advanced things.
 
 Here is an example test structure for reference:
 
@@ -99,12 +99,12 @@ After you configure perms and create it, copy the API key and paste it into your
 # Project Structure
 This explains where each file and directory needs to be located in your project for this CLI tester to work properly.
 
-`tests/` exists under the working directory
-`src/` exists under the working directory
-`config/` exists under the working directory
-`local.env` exists under `config/`.
-`test_handler.py` exists under `tests/`
-`Tests.luau` exists under `tests/`
+- `tests/` exists under the working directory
+- `src/` exists under the working directory
+- `config/` exists under the working directory
+- `local.env` exists under `config/`.
+- `test_handler.py` exists under `tests/`
+- `Tests.luau` exists under `tests/`
 
 ## Extra Notes:
 The CLI tester tests the `src/` directory, nothing else, this follows with how Rojo works. Make sure you put what you want to be tested under `src/` that's why it's included here even though it doesn't exist in this repo, because the code directly references it and requires it to exist. It will also default the file tree into ReplicatedStorage.
@@ -149,6 +149,11 @@ All CLI arguments are required (except -h of course) *if these values are not pa
 The Python and luau separation is intentional. It is meant to allow developers who are only comfortable with luau to never have to touch the .py file. Try to keep that separation. I also put a considerable amount of effort into avoiding non standard Python libraries, so that the required setup ritual has the smallest barrier of entry possible. The .py file is not intended to be edited or viewed under normal use, but is meant to be transparent for people who want to know whats going on under the hood.
 
 There is a stub function in the Python file meant for forking ease, a function by the name `parseLogs`, it's there if someone wants to handle the logs that are returned more explicitly than I currently handle them.
+
+# Credits
+Created by Chloricmass80
+@chloricmass80 on [Roblox](https://www.roblox.com/users/226463906/profile)
+@chloricmass on Discord (Chloric#8493)
 
 # License
 Licensed under the MIT License.
