@@ -492,15 +492,15 @@ if __name__ == "__main__":
     place = args.place or getattr(config, "PLACE_ID", None)
 
     if unloaded_api_key == None or unloaded_api_key == "":
-        logging.error("Program expects an API key to be passed on executiong using -k or filled in local.env under config")
+        logging.error("Program expects an API key to be passed on execution using -k or filled in local.env under config")
         sys.exit(1)
     
     if universe == None or universe == "":
-        logging.error("Program expects a universe ID to be passed on executiong using -u or filled in local.env under config")
+        logging.error("Program expects a universe ID to be passed on execution using -u or filled in local.env under config")
         sys.exit(1)
 
     if place == None or place == "":
-        logging.error("Program expects an place ID to be passed on executiong using -p or filled in local.env under config")
+        logging.error("Program expects an place ID to be passed on execution using -p or filled in local.env under config")
         sys.exit(1)
 
 
