@@ -152,8 +152,8 @@ There is a stub function in the Python file meant for forking ease, a function b
 
 # Credits
 Created by Chloricmass80
-@chloricmass80 on [Roblox](https://www.roblox.com/users/226463906/profile)
-@chloricmass on Discord (Chloric#8493)
+- @chloricmass80 on [Roblox](https://www.roblox.com/users/226463906/profile)
+- @chloricmass on Discord (Chloric#8493)
 
 # License
 Licensed under the MIT License.
