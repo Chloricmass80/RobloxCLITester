@@ -152,7 +152,7 @@ Any CLI arguments marked as required here are only required *if the values are n
 | --api-key        | -k         | The API key or a file path to a plain text file with the API key                   | Yes       |
 | --place          | -p         | The place Id of the dedicated test place                                           | Yes       |
 | --universe       | -u         | The universe Id of the dedicated test place                                        | Yes       |
-| --project-name   | -p         | The name of the root file in the built roblox instance. Defaults to the CWD's name | No        |
+| --project-name   | -n         | The name of the root file in the built roblox instance. Defaults to the CWD's name | No        |
 | --root-directory | -r         | The name of the directory you want to build. Defaults to 'src' under the CWD.      | No        |
 
 # Contributing
