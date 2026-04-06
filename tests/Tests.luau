@@ -2,7 +2,6 @@
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
-RecurseModule = ReplicatedStorage:WaitForChild("RecurseAudioEngine")
 
 tests = {}
 
@@ -167,6 +166,12 @@ function TestClass:Execute() : ...any
     table.remove(results, 1)
     if passed then
         passed, results = self._passCondition(table.unpack(results))
+        if passed == nil then
+            self._failReason = "runtime error"
+            self._error = string.format("%s's Condition function did not return a value, make sure to end it with 'return Condition:GetResults()'.", self._name)
+            self._hasPassed = false
+            return
+        end
     else
         self._failReason = "runtime error"
         self._error = results[1]
@@ -199,6 +204,8 @@ function ExampleCondition(result1, result2)
     condition:AddCheck("ExampleCheckName2", "ExampleExpectedValue2")
 
     condition:RunChecks({result1, result2})  -- ex: if result1 ~= "ExampleExpectedValue", check failed
+
+    return condition:GetResults()
 end
 TestClass.new("ExampleTest", ExampleAction, ExampleCondition)
 --]]
@@ -206,7 +213,7 @@ TestClass.new("ExampleTest", ExampleAction, ExampleCondition)
 
 
 
---  Tests go here --
+-- tests go here! --
 
 
 

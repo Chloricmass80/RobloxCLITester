@@ -77,6 +77,18 @@ def parseArgs():
         help="Universe to run unit tests on, make sure this is an empty universe where you have nothing important, this script will destroy previously written data on that universe.",
         metavar="<universe to upload rbxlx data>"
     )
+    parser.add_argument(
+        "-n",
+        "--project-name",
+        help="The name the overall project falls under in the test file uploaded to Studio. This is how your systems will be referenced through Tests.luau. Defaults to cwd name.",
+        metavar="<name to call root file>"
+    )
+    parser.add_argument(
+        "-r",
+        "--root-directory",
+        help="The root directory to build a roblox place from. Defaults to src.",
+        metavar="<root directory>"
+    )
     
     return parser.parse_args()
 
@@ -179,7 +191,7 @@ def pollForTaskCompletion(api_key, path):
             return task
         else:
             if exhausted_time >= 20:
-                logging.error("Task spent too long processing. Execution limit per minute likely exhausted. Try again later.")
+                logging.error("Task spent too long processing. Execution limit per minute likely exhausted, or the task is hanging. Try again later or check to make sure that Tests.luau isn't infinitely yeilding.")
                 sys.exit(1)
             sys.stderr.write('.')
             sys.stderr.flush()
@@ -237,10 +249,10 @@ def handleResults(results):
             else:
                 msg = f"  {key}:"
             msg += (" " * ((max_key_len - len(key)) + 5))
-            if passed == False:
-                logging.warning(f"{msg} Test failed, {fail_reason}.  ❌")
-            else:
+            if passed == True:
                 logging.info(f"{msg} Test passed!  ✅")
+            else:
+                logging.warning(f"{msg} Test failed, {fail_reason}.  ❌")
 
     if len(failed_tests) == 0:
         return
@@ -320,7 +332,7 @@ def buildScript(script_path: str, parent, script_name = None):
                     if prop.get("name") == "Name":
                         script_name = prop.text
         if script_name == "ReplicatedStorage":
-            script_name = "RecurseAudioEngine"
+            script_name = "src"
     
     ## return unparented element for script to later parent
     module = ET.SubElement(parent, "Item", {'class': 'ModuleScript', 'referent': "RBXB04A222E0AB64BFEB7396075A3173918"})
@@ -479,10 +491,10 @@ if __name__ == "__main__":
 
     logger.addHandler(handler)
 
-
-    if os.path.basename(os.getcwd()) != "RECURSE Audio Engine":
-        p = pathlib.Path(__file__)
-        os.chdir(str(p.parent.parent))
+    script_path = pathlib.Path(__file__)
+    cwd_path = script_path.parent.parent
+    if cwd_path.name != os.path.basename(os.getcwd()):
+        os.chdir(cwd_path.resolve())
 
     args = parseArgs()
     config = Config()
@@ -490,6 +502,8 @@ if __name__ == "__main__":
     unloaded_api_key = args.api_key or getattr(config, "ROBLOX_API_KEY", None)
     universe = args.universe or getattr(config, "UNIVERSE_ID", None)
     place = args.place or getattr(config, "PLACE_ID", None)
+    project_name = (args.project_name or getattr(config, "PROJECT_NAME", None)) or cwd_path.name
+    root_dir = (args.root_directory or getattr(config, "ROOT_DIRECTORY", None)) or "src"
 
     if unloaded_api_key == None or unloaded_api_key == "":
         logging.error("Program expects an API key to be passed on execution using -k or filled in local.env under config")
@@ -509,26 +523,22 @@ if __name__ == "__main__":
 
     replicated_storage, tree = buildRbxlx()
 
-    src_directory = None
-    for dir in os.listdir(str(pathlib.Path(os.getcwd()))):
-        if os.path.basename(dir) == "src":
-            src_directory = pathlib.Path(dir)
-            break
-
-    if src_directory is None:
-        logging.error('No "src" directory found under Current Working Directory.\n' \
-        'Please make sure that the project is properly formatted.')
+    if not (cwd_path/root_dir).exists():
+        logging.error(f"Passed ROOT_DIRECTORY ('{root_dir}') does not exist under the current working directory."
+                      "\nPlease make sure you fix typos. If the directory does exist, make sure you've formatted the CLI Tester's files properly under your project in accordance to the 'Project Structure' section in README.md")
         sys.exit(1)
 
     entires = os.listdir()
 
     init_file = None
 
-    constructDirectory("src", replicated_storage, "RecurseAudioEngine")
+    constructDirectory(root_dir, replicated_storage, project_name)
 
     xml_data = imbueCdata("test_place.rbxlx", tree)
     xml_buffer = io.BytesIO()
     xml_buffer.write(xml_data.encode('utf-8'))
+        
+    
 
     xml_upload_url = (
     f"https://apis.roblox.com/universes/v1/{universe}/places/{place}/versions?versionType=Saved"

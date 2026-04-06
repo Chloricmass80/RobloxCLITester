@@ -37,6 +37,8 @@ function ExampleCondition(result1, result2)
     condition:AddCheck("ExampleCheckName2", "ExampleExpectedValue2")
 
     condition:RunChecks({result1, result2})  -- ex: if result1 ~= "ExampleExpectedValue", check failed
+
+    return condition:GetResults()
 end
 TestClass.new("ExampleTest", ExampleAction, ExampleCondition)
 ```
@@ -52,7 +54,7 @@ function ExampleAction()
 end
 ```
 
-Then you must create a condition function. This takes what the action function returned as parameters, and then tests it based on what the expected output is. Continuing the addition example:
+Then you must create a condition function. This takes what the action function returned as parameters, and then tests it based on what the expected output is. It must always returns 'condition:GetResults()'. Continuing the addition example:
 
 ```lua
 function ExampleCondition(result1)
@@ -61,6 +63,8 @@ function ExampleCondition(result1)
     condition:AddCheck("SumCheck", 3)
 
     condition:RunChecks({result1})  -- ex: if result1 ~= 3, check failed
+
+    return condition:GetResults()
 end
 ```
 
@@ -103,26 +107,27 @@ After you configure perms and create it, copy the API key and paste it into your
 This explains where each file and directory needs to be located in your project for this CLI tester to work properly.
 
 - `tests/` exists under the working directory
-- `src/` exists under the working directory
 - `config/` exists under the working directory
 - `local.env` exists under `config/`.
 - `test_handler.py` exists under `tests/`
 - `Tests.luau` exists under `tests/`
 
-## Extra Notes:
-The CLI tester tests the `src/` directory, nothing else, this follows with how Rojo works. Make sure you put what you want to be tested under `src/` that's why it's included here even though it doesn't exist in this repo, because the code directly references it and requires it to exist. It will also default the file tree into ReplicatedStorage.
+### Extra Notes:
+The root directory is by default parented under Replicated Storage, test it as such.
 
 # Rojo Compatibility
-This tool mirrors Rojo file conventions without requiring rojo explicitly. It will copy the file structure under src and create a .rbxlx file to upload the same way Rojo would. So if the tests pass, you know that the behaviors should work when you tell Rojo to copy the src code into Studio. If you're not using Rojo, it will still work as long as you structure it like Rojo expects, it follows the same conventions. It's meant to supplement the Rojo pipeline, streamlining the testing process and encouraging developers to catch bugs early.
+This tool mirrors Rojo file conventions without requiring rojo explicitly. It will copy the file structure under the root directory and create a .rbxlx file to upload the same way Rojo would. So if the tests pass, you know that the behaviors should work when you tell Rojo to copy the code into Studio. If you're not using Rojo, it will still work as long as you structure it like Rojo expects, it follows the same conventions. It's meant to supplement the Rojo pipeline, streamlining the testing process and encouraging developers to catch bugs early.
 
 # Configuration Reference
-| Name           | Description                                                      | Required? |
-| -------------- | ---------------------------------------------------------------- | --------- |
-| ROBLOX_API_KEY | The API key or a file path to a plain text file with the API key | Yes       |
-| UNIVERSE_ID    | The universe Id of the dedicated test place                      | Yes       |
-| PLACE_ID       | The place Id of the dedicated test place                         | Yes       |
+| Name           | Description                                                                        | Required? |
+| -------------- | ---------------------------------------------------------------------------------- | --------- |
+| ROBLOX_API_KEY | The API key or a file path to a plain text file with the API key                   | Yes       |
+| UNIVERSE_ID    | The universe Id of the dedicated test place                                        | Yes       |
+| PLACE_ID       | The place Id of the dedicated test place                                           | Yes       |
+| PROJECT_NAME   | The name of the root file in the built roblox instance. Defaults to the CWD's name | No        |
+| ROOT_DIRECTORY | The name of the directory you want to build. Defaults to 'src' under the CWD.      | No        |
 
-These values are *not required if they are passed through CLI arguments* but they need to be passed through at least one medium.
+These required values are *not required if they are passed through CLI arguments* but they need to be passed through at least one medium.
 
 ## Where to Find: ROBLOX_API_KEY
 After creating an API key at this website: [API Key Creation](https://create.roblox.com/dashboard/credentials), Roblox will give a giant string, that's the API key.
@@ -139,14 +144,16 @@ Go to your experiences here: [Experiences](https://create.roblox.com/dashboard/c
 
 the .py file can take CLI arguments (using the `argparse` library) instead of the values passed in the .env file. *Using these arguments will overwrite values in the .env file*, but it is recommended to just fill out local.env since it's a lot easier to execute that way.
 
-All CLI arguments are required (except -h of course) *if these values are not passed in local.env.*
+Any CLI arguments marked as required here are only required *if the values are not otherwise passed through `local.env`*
 
-| Long Name  | Short Name | Description                                                     |
-| ---------- | ---------- | ----------------------------------------------------------------|
-| --help     | -h         | Shows CLI arguments and what they are                           |
-| --api-key  | -k         | The API key or a file path to a plain text file with the API key|
-| --place    | -p         | The place Id of the dedicated test place                        |
-| --universe | -u         | The universe Id of the dedicated test place                     |
+| Long Name        | Short Name | Description                                                                        | Required? |
+| ---------------- | ---------- | ---------------------------------------------------------------------------------- | --------- |
+| --help           | -h         | Shows CLI arguments and what they are                                              | No        |
+| --api-key        | -k         | The API key or a file path to a plain text file with the API key                   | Yes       |
+| --place          | -p         | The place Id of the dedicated test place                                           | Yes       |
+| --universe       | -u         | The universe Id of the dedicated test place                                        | Yes       |
+| --project-name   | -p         | The name of the root file in the built roblox instance. Defaults to the CWD's name | No        |
+| --root-directory | -r         | The name of the directory you want to build. Defaults to 'src' under the CWD.      | No        |
 
 # Contributing
 The Python and luau separation is intentional. It is meant to allow developers who are only comfortable with luau to never have to touch the .py file. Try to keep that separation. I also put a considerable amount of effort into avoiding non standard Python libraries, so that the required setup ritual has the smallest barrier of entry possible. The .py file is not intended to be edited or viewed under normal use, but is meant to be transparent for people who want to know whats going on under the hood.
