@@ -1,7 +1,7 @@
 This tool does a few things. It's main purpose is to streamline unit testing with the Rojo workflow. While other projects exist that do the same thing, this is meant to be light-weight and easy to use. All it requires is a command line, most any Python version, and an API key, then you just run the .py file under the tests directory, and you get the results for your tests. We'll go over how to make a test in a bit.
 
 # Requirements
-- Python
+- Python V3.9 or newer
 - An API key with valid perms
 - That's it.
 
