@@ -152,6 +152,7 @@ function TestClass.new(name:string, actionFunc: () -> ...any, passCondition : (.
         _name = name;
         _hasPassed = nil;
         _failReason = nil;
+        _execTime = nil;
         _error = nil;
     }, TestClass)
 
@@ -161,7 +162,9 @@ function TestClass.new(name:string, actionFunc: () -> ...any, passCondition : (.
 end
 
 function TestClass:Execute() : ...any
+    local strtTime = os.clock()
     local results = table.pack(pcall(self._actionFunc))
+    self._execTime = os.clock() - strtTime
     local passed = results[1]
     table.remove(results, 1)
     if passed then
@@ -222,7 +225,7 @@ resultDict = {}
 for name, test in pairs(tests) do
     test:Execute()
 
-    resultDict[name] = {test._hasPassed, test._failReason, test._error}
+    resultDict[name] = {test._hasPassed, test._execTime, test._failReason, test._error}
 end
 
 return resultDict

@@ -237,11 +237,13 @@ def handleResults(results):
 
     for item in results:
         for key, result_table in item.items():
-            if len(result_table) == 1:
-                passed = True
+            if len(result_table) == 2:
+                passed = result_table[0]
+                execution_time = result_table[1]
             else:
                 passed = result_table[0]
-                fail_reason = result_table[1]
+                execution_time = result_table[1]
+                fail_reason = result_table[2]
                 failed_tests.append({key:result_table})
             
             if passed:
@@ -249,10 +251,11 @@ def handleResults(results):
             else:
                 msg = f"  {key}:"
             msg += (" " * ((max_key_len - len(key)) + 5))
+
             if passed == True:
-                logging.info(f"{msg} Test passed!  ✅")
+                logging.info(f"{msg} Test passed!  ✅     Execution time: {execution_time}")
             else:
-                logging.warning(f"{msg} Test failed, {fail_reason}.  ❌")
+                logging.warning(f"{msg} Test failed, {fail_reason}.  ❌     Execution time: {execution_time}")
 
     if len(failed_tests) == 0:
         return
@@ -262,8 +265,8 @@ def handleResults(results):
     logging.info("Failure Summary:\n")
     for item in failed_tests:
         for key, result_table in item.items():
-            error = result_table[2]
-            fail_reason = result_table[1]
+            error = result_table[3]
+            fail_reason = result_table[2]
             if fail_reason == "runtime error":
                 logging.warning(f"{key} error:")
             elif fail_reason == "did not meet pass conditions":
