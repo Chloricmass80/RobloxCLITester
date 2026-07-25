@@ -128,14 +128,18 @@ def readFileExitOnFailure(path, file_description):
     sys.exit(1)
 
 def loadAPIKey(api_key_arg: str):
-    source = ''
+    source = 'local.env'
     api_key_arg = api_key_arg.strip()
-    source = f'file {api_key_arg}'
-    if os.path.exists(source) and os.path.isfile(source):
+    if os.path.exists(api_key_arg) and os.path.isfile(api_key_arg):
         key = readFileExitOnFailure(api_key_arg, "API key").strip()
+        source = api_key_arg
+    elif os.path.exists(f'config\\{api_key_arg}') and os.path.isfile(f'config\\{api_key_arg}'):
+        key = readFileExitOnFailure(f'config\\{api_key_arg}', "API key").strip()       
+        source = f'config\\{api_key_arg}'
     else:
         key = api_key_arg
 
+    print(key)
     try:
         base64.b64decode(key, validate=True)
         return key
