@@ -139,7 +139,6 @@ def loadAPIKey(api_key_arg: str):
     else:
         key = api_key_arg
 
-    print(key)
     try:
         base64.b64decode(key, validate=True)
         return key
